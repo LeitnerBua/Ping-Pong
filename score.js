@@ -5,7 +5,6 @@ class Score {
     }
 
     show(x, y) {
-
         noStroke();
         fill(255);
         textSize(48);
@@ -14,5 +13,9 @@ class Score {
 
     update(value) {
         this.score += value;
+    }
+
+    gameLost() {
+        return this.score >= 7;
     }
 }

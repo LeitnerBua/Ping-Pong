@@ -1,12 +1,12 @@
 class Ball {
     constructor() {
         this.radius = 10;
-       
-        this.speed = createVector(1, 1).mult(8);
+        
         this.direction = createVector(1, 1);
     }
 
     spawn() {
+        this.speed = createVector(1, 1).mult(8);
          this.pos = createVector(width / 2, height / 2);
          this.r = random();
     }
@@ -21,6 +21,13 @@ class Ball {
         }
     }
 
+    accelerate() {
+        if(this.speed.x < 30) {
+            this.speed.x += 1;
+            this.speed.y += 1;
+        }
+    }
+
     show() {
         stroke(255);
         fill(255);
@@ -28,11 +35,8 @@ class Ball {
     }
 
     check_edges() {
-        if(this.pos.y + this.radius * 2 > height) {
-            // this.direction.x *= -1;
-            this.direction.y *= -1;
-        } else if (this.pos.y - this.radius *2 < 0) {
-            // this.direction.x *= -1;
+        if(this.pos.y + this.radius * 2 > height || this.pos.y - this.radius * 2 < 0) {
+            this.accelerate();
             this.direction.y *= -1;
         }
     }
@@ -42,8 +46,10 @@ class Ball {
             this.pos.x - this.radius <= paddle.pos.x + paddle.width &&
             this.pos.x + this.radius >= paddle.pos.x &&
             this.pos.y + this.radius >= paddle.pos.y &&
-            this.pos.y  - this.radius <= paddle.pos.y + paddle.height)
+            this.pos.y  - this.radius <= paddle.pos.y + paddle.height) {
             this.direction.x *= -1;
+            // this.accelerate();
+        }
         else if(paddle.side == "right" &&
             this.pos.x + this.radius >= paddle.pos.x &&
             this.pos.x - this.radius <= paddle.pos.x - paddle.width &&

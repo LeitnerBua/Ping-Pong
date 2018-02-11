@@ -1,18 +1,25 @@
-let leftPaddle, rightPaddle;
+let leftPaddle,
+    rightPaddle;
 
 let paddleMargin = 20;
 
 let ball;
 
-let leftScore, rightScore;
+let leftScore,
+    rightScore;
+
+let gameRunning = false;
+
+let colorRed = '#da0f22';
+let colorBlue = '#150be3';
 
 function setup() {
-	createCanvas(800, 500);
-    
-    let paddleCenter = height / 2 -(150 /2);
+    createCanvas(windowWidth, windowHeight);
 
-	leftPaddle = new Paddle(paddleMargin, paddleCenter, "left");
-    rightPaddle = new Paddle(width - paddleMargin-10, paddleCenter, "right");
+    let paddleCenter = height / 2 - (150 / 2);
+
+    leftPaddle = new Paddle(paddleMargin, paddleCenter, "left");
+    rightPaddle = new Paddle(width - paddleMargin - 10, paddleCenter, "right");
 
     ball = new Ball();
     ball.spawn();
@@ -24,36 +31,43 @@ function setup() {
 }
 
 function draw() {
-	background(0);
+    background(0);
 
-
-    for(let lineY = 0; lineY < height; lineY+= 20) {
+    for (let lineY = 0; lineY < height; lineY += 20) {
         strokeWeight(5);
         stroke(255);
-        line(width / 2, lineY, width / 2, lineY+10);
+        line(width / 2, lineY, width / 2, lineY + 10);
     }
 
-	leftPaddle.show();
-    rightPaddle.show();
-
+    leftPaddle.show(colorRed);
+    rightPaddle.show(colorBlue);
 
     ball.show();
-    ball.update();
+    if (gameRunning) {
+        ball.update();
+    } else {
+        showMessage("Press space to play!", 255, 'rgb(0, 100, 200)', width / 2, height / 2 - 100);
+    }
+
     ball.check_edges();
     ball.hits_paddle(leftPaddle);
     ball.hits_paddle(rightPaddle);
 
     leftPaddle.move();
-    leftPaddle.follow_ball(ball);
+    // if (self_playing) {
+    //     leftPaddle.follow_ball(ball);
+    //
+    // }
     leftPaddle.check_edges();
 
-    rightPaddle.follow_ball(ball);
+    // rightPaddle.follow_ball(ball);
+    rightPaddle.self_moving();
     rightPaddle.check_edges();
 
     leftScore.show(width / 3, height / 10);
     rightScore.show(width - (width / 3), height / 10);
 
-    if(ball.pos.x - ball.radius < 0) {
+    if (ball.pos.x - ball.radius < 0) {
         rightScore.update(1);
         ball.spawn();
 
@@ -61,16 +75,20 @@ function draw() {
         leftScore.update(1);
         ball.spawn();
     }
+
+    if (leftScore.gameLost()) {
+        showMessage("You Won!", 0, colorRed, width / 4, height / 2);
+        noLoop();
+    } else if (rightScore.gameLost()) {
+        showMessage("You Won!", 0, colorBlue, width - (width / 4), height / 2);
+        noLoop();
+    }
+
+    showFramerate();
 }
 
 function keyPressed() {
-    if(key === "w" || key === "W")
-        leftPaddle.isMovingUp = true;
-    else if(key === "s" || key === "S")
-        leftPaddle.isMovingDown = true;
-}
-
-function keyReleased() {
-    leftPaddle.isMovingUp = false;
-    leftPaddle.isMovingDown = false;
+    if (key === " ") {
+        gameRunning = true;
+    }
 }
