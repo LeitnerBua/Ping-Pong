@@ -47,7 +47,7 @@ function draw() {
     if (gameRunning) {
         ball.update();
     } else {
-        showMessage("Press space to play!", 255, 'rgb(0, 100, 200)', width / 2, height / 2 - 100);
+        showMessage("Press any key to play!", 255, 'rgb(0, 100, 200)', width / 2, height / 2 - 100);
     }
 
     ball.check_edges();
@@ -89,7 +89,5 @@ function draw() {
 }
 
 function keyPressed() {
-    if (key === " ") {
-        gameRunning = true;
-    }
+    gameRunning = true;
 }
