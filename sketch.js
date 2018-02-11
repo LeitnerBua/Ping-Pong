@@ -12,6 +12,7 @@ let gameRunning = false;
 
 let colorRed = '#da0f22';
 let colorBlue = '#150be3';
+let colorGreen = '#09c706';
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -76,11 +77,11 @@ function draw() {
         ball.spawn();
     }
 
-    if (leftScore.gameLost()) {
-        showMessage("You Won!", 0, colorRed, width / 4, height / 2);
+    if (leftScore.gameWon()) {
+        showMessage("You Won!", 0, colorGreen, width / 4, height / 2);
         noLoop();
-    } else if (rightScore.gameLost()) {
-        showMessage("You Won!", 0, colorBlue, width - (width / 4), height / 2);
+    } else if (rightScore.gameWon()) {
+        showMessage("You Lost!", 0, colorRed, width / 4, height / 2);
         noLoop();
     }
 

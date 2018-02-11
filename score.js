@@ -15,7 +15,7 @@ class Score {
         this.score += value;
     }
 
-    gameLost() {
+    gameWon() {
         return this.score >= 7;
     }
 }
