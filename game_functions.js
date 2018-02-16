@@ -7,7 +7,6 @@ function showFramerate() {
     text("FPS: " + fr, 0, 0 + 16);
 }
 
-
 function showMessage(message, color, border, x, y) {
     textSize(48);
     fill(color);

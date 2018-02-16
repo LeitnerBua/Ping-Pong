@@ -1,7 +1,6 @@
 class Ball {
     constructor() {
         this.radius = 10;
-        
         this.direction = createVector(1, 1);
     }
 
@@ -12,6 +11,7 @@ class Ball {
     }
 
     update() {
+        //start randomly to the right or the left
         if(this.r < 0.5) {
             this.pos.x += this.speed.x * this.direction.x;
             this.pos.y += this.speed.y * this.direction.y;
@@ -36,26 +36,22 @@ class Ball {
 
     check_edges() {
         if(this.pos.y + this.radius * 2 > height || this.pos.y - this.radius * 2 < 0) {
-            this.accelerate();
             this.direction.y *= -1;
         }
     }
 
     hits_paddle(paddle) {
-        if(paddle.side == "left" &&
-            this.pos.x - this.radius <= paddle.pos.x + paddle.width &&
-            this.pos.x + this.radius >= paddle.pos.x &&
-            this.pos.y + this.radius >= paddle.pos.y &&
-            this.pos.y  - this.radius <= paddle.pos.y + paddle.height) {
+        if(this.pos.x + this.radius > paddle.pos.x &&
+            this.pos.x - this.radius < paddle.pos.x + paddle.width &&
+            this.pos.y + this.radius > paddle.pos.y &&
+            this.pos.y - this.radius < paddle.pos.y + paddle.height) {
+
             this.direction.x *= -1;
-            // this.accelerate();
+            this.accelerate();
+
+            return true;
         }
-        else if(paddle.side == "right" &&
-            this.pos.x + this.radius >= paddle.pos.x &&
-            this.pos.x - this.radius <= paddle.pos.x - paddle.width &&
-            this.pos.y + this.radius >= paddle.pos.y &&
-            this.pos.y  - this.radius <= paddle.pos.y + paddle.height)
-            this.direction.x *= -1;
+        return false;
 
     }
 }
