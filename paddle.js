@@ -18,14 +18,16 @@ class Paddle {
 	}
 
     move() {
-        this.pos.y = mouseY;
+        this.pos.y = mouseY - this.height / 2;
     }
 
-    self_moving() {
-        if(ball.pos.y < this.pos.y)
+    self_moving(ball) {
+        if(ball.pos.x > (width / 3) * 2) {
+            if(ball.pos.y < this.pos.y)
                 this.pos.y -= this.speed;
             else if(ball.pos.y > this.pos.y + this.height)
-                this.pos.y += this.speed;;
+                this.pos.y += this.speed;
+        }
     }
 
     check_edges() {

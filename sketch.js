@@ -1,7 +1,7 @@
 let leftPaddle,
     rightPaddle;
 
-let paddleMargin = 20;
+let paddleMargin = 5;
 
 let ball;
 
@@ -9,6 +9,14 @@ let leftScore,
     rightScore;
 
 let gameRunning = false;
+
+
+let particles = [];
+let amountParticles = 20;
+
+hitRightPaddle = false;
+hitLeftPaddle = false;
+
 
 let colorRed = '#da0f22';
 let colorBlue = '#150be3';
@@ -28,12 +36,13 @@ function setup() {
     leftScore = new Score();
     rightScore = new Score();
 
-    // frameRate(10);
+    //frameRate(10);
 }
 
 function draw() {
     background(0);
 
+    // vertical line
     for (let lineY = 0; lineY < height; lineY += 20) {
         strokeWeight(5);
         stroke(255);
@@ -51,30 +60,38 @@ function draw() {
     }
 
     ball.check_edges();
-    ball.hits_paddle(leftPaddle);
-    ball.hits_paddle(rightPaddle);
+    hitLeftPaddle = ball.hits_paddle(leftPaddle);
+    hitRightPaddle = ball.hits_paddle(rightPaddle);
 
     leftPaddle.move();
-    // if (self_playing) {
-    //     leftPaddle.follow_ball(ball);
-    //
-    // }
     leftPaddle.check_edges();
 
-    // rightPaddle.follow_ball(ball);
-    rightPaddle.self_moving();
+    rightPaddle.self_moving(ball);
     rightPaddle.check_edges();
 
     leftScore.show(width / 3, height / 10);
     rightScore.show(width - (width / 3), height / 10);
 
-    if (ball.pos.x - ball.radius < 0) {
-        rightScore.update(1);
-        ball.spawn();
-
-    } else if (ball.pos.x + ball.radius > width) {
+    if (ball.pos.x - ball.radius > width) {
         leftScore.update(1);
         ball.spawn();
+    }
+
+    if (ball.pos.x + ball.radius < 0) {
+        rightScore.update(1);
+        ball.spawn();
+    }
+
+    if(hitRightPaddle) {
+        createParticles(ball.pos.x + ball.radius, ball.pos.y, -1);
+        hitRightPaddle = !hitRightPaddle;
+    } else if(hitLeftPaddle) {
+        createParticles(ball.pos.x - ball.radius, ball.pos.y, 1);
+        hitLeftPaddle = !hitLeftPaddle;
+    }
+
+    if(particles.length > 0) {
+        showParticles();
     }
 
     if (leftScore.gameWon()) {
@@ -90,4 +107,24 @@ function draw() {
 
 function keyPressed() {
     gameRunning = true;
+}
+
+function mousePressed() {
+    gameRunning = true;
+}
+
+function createParticles(x, y, multi) {
+     for(let i = 0; i < amountParticles; i++) {
+        particles.push(new Particle(x, y, multi));
+    }
+}
+
+
+function showParticles() {
+    for(let i = 0; i < particles.length; i++) {
+        particles[i].show();
+        if(particles[i].radius <= 0) {
+            particles.splice(i, 1);
+        }
+    }
 }
